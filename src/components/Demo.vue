@@ -30,6 +30,7 @@
 <script lang="ts">
 import {defineComponent, ref} from 'vue'
 import { FormInst, FormItemRule, useMessage } from 'naive-ui'
+import sql from 'mssql'
 
 export default defineComponent({
   setup() {
@@ -57,7 +58,24 @@ export default defineComponent({
         showModalRef.value = false
       },
       onPositiveClick() {
+        const sqlConfig = {
+          user: model.value.username,
+          password: model.value.password,
+          database: model.value.database,
+          server: model.value.host,
+          pool: {
+            max: 10,
+            min: 0,
+            idleTimeoutMillis: 30000
+          },
+          options: {
+            encrypt: false, // for azure
+            trustServerCertificate: false // change to true for local dev / self-signed certs
+          }
+        }
+
         console.log(model)
+
 
         message.success('Submit')
         showModalRef.value = false
